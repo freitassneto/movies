@@ -6,9 +6,13 @@ body {
 .main-movies {
   width: 80%;
   margin: 0 auto;
+
+  display: flex;
+  gap: 1rem;
 }
 
-#title {
+.releases-title,
+.watchlist-title {
   font-size: 32px;
   font-weight: 600;
   margin-block: 32px;
@@ -110,4 +114,15 @@ body {
   background-color: #216b33;
   color: white;
   transition: 0.2s;
+}
+
+.watchlist-title {
+  text-align: center;
+}
+
+.watchlist-list {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
