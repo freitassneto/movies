@@ -1,5 +1,6 @@
 const moviesList = [
   {
+    id: 1,
     title: "Matrix",
     poster: "./img/matrix-poster.jpg",
     genre: "Ficção Científica",
@@ -8,6 +9,7 @@ const moviesList = [
     synopsis: `O jovem programador Thomas Anderson é atormentado por estranhos pesadelos em que está sempre conectado por cabos a um imenso sistema de computadores do futuro.`,
   },
   {
+    id: 2,
     title: "O Poderoso Chefão",
     poster: "./img/poderoso-chefao-poster.jpg",
     genre: "Drama",
@@ -16,6 +18,7 @@ const moviesList = [
     synopsis: `Uma família mafiosa luta para estabelecer sua supremacia nos Estados Unidos depois da Segunda Guerra Mundial. Uma tentativa de assassinato deixa o chefão Vito Corleone incapacitado e força os filhos Michael e Sonny a assumir os negócios.`,
   },
   {
+    id: 3,
     title: "A Origem",
     poster: "./img/a-origem-poster.jpg",
     genre: "Ação",
@@ -24,6 +27,7 @@ const moviesList = [
     synopsis: `Dom Cobb é um ladrão com a rara habilidade de roubar segredos do inconsciente, obtidos durante o estado de sono. Impedido de retornar para sua família, ele recebe a oportunidade de se redimir ao realizar uma tarefa aparentemente impossível: plantar uma ideia na mente do herdeiro de um império.`,
   },
   {
+    id: 4,
     title: "Pulp Fiction",
     poster: "./img/pulp-fiction-poster.jpg",
     genre: "Crime",
@@ -32,6 +36,7 @@ const moviesList = [
     synopsis: `Assassino que trabalha para a máfia se apaixona pela esposa de seu chefe quando é convidado a acompanhá-la, um boxeador descumpre sua promessa de perder uma luta e um casal tenta um assalto que rapidamente sai do controle.`,
   },
   {
+    id: 5,
     title: "Interestelar",
     poster: "./img/interestellar-poster.jpg",
     genre: "Aventura",
@@ -40,6 +45,7 @@ const moviesList = [
     synopsis: `As reservas naturais da Terra estão chegando ao fim e um grupo de astronautas recebe a missão de verificar possíveis planetas para receberem a população mundial, possibilitando a continuação da espécie. Cooper é chamado para liderar o grupo e aceita a missão sabendo que pode nunca mais ver os filhos. Ao lado de Brand, Jenkins e Doyle, ele seguirá em busca de um novo lar.`,
   },
   {
+    id: 6,
     title: "A Fugas das Galinhas",
     poster: "./img/fuga-das-galinhas-poster.jpg",
     genre: "Animação",
@@ -48,6 +54,7 @@ const moviesList = [
     synopsis: `Após frustradas tentativas de escapar da granja dos Tweedy, as galinhas, lideradas por Ginger, mantêm poucas esperanças. Mas, quando o galo voador Rocky aparece no galinheiro, elas acreditam que ele poderá ensiná-las a voar, e assim, uma nova luz surge no fim do túnel.`,
   },
   {
+    id: 7,
     title: "De Volta Para o Futuro",
     poster: "./img/de-volta-para-o-futuro-poster.jpg",
     genre: "Ficção Científica",
@@ -57,8 +64,9 @@ const moviesList = [
   },
 ];
 
+const watchlistList = [];
+
 function createCard(movie) {
-  const moviesUl = document.querySelector(".movies-list");
   const movieCard = document.createElement("li");
   const moviePoster = document.createElement("img");
   const movieContent = document.createElement("div");
@@ -71,6 +79,16 @@ function createCard(movie) {
   const movieActions = document.createElement("div");
   const buttonWatchlist = document.createElement("button");
   const buttonRentMovie = document.createElement("button");
+
+  moviePoster.src = movie.poster;
+  moviePoster.alt = `Poster do filme ${movie.title}`;
+
+  movieTitle.innerText = movie.title;
+  movieGenre.innerText = movie.genre;
+  movieSynopsis.innerText = movie.synopsis;
+  movieRating.innerText = movie.rated;
+  buttonWatchlist.innerText = "Adicionar à Watchlist";
+  buttonRentMovie.innerText = "Alugar";
 
   for (let i = 1; i <= 5; i++) {
     const starIcon = document.createElement("i");
@@ -102,15 +120,10 @@ function createCard(movie) {
     movieRating.classList.add("movie-rating-g");
   }
 
-  moviePoster.src = movie.poster;
-  moviePoster.alt = `Poster do filme ${movie.title}`;
-
-  movieTitle.innerText = movie.title;
-  movieGenre.innerText = movie.genre;
-  movieSynopsis.innerText = movie.synopsis;
-  movieRating.innerText = movie.rated;
-  buttonWatchlist.innerText = "Adicionar à Watchlist";
-  buttonRentMovie.innerText = "Alugar";
+  buttonWatchlist.addEventListener("click", function () {
+    watchlistList.push(movie);
+    renderWatchlistCards(watchlistList);
+  });
 
   movieActions.append(buttonWatchlist, buttonRentMovie);
   movieInfo.append(
@@ -122,12 +135,53 @@ function createCard(movie) {
   );
   movieContent.append(movieInfo, movieActions);
   movieCard.append(moviePoster, movieContent);
-  moviesUl.append(movieCard);
+
+  return movieCard;
 }
 
 function renderCards(list) {
-  list.forEach((card) => {
-    createCard(card);
-  });
+  const moviesUl = document.querySelector(".movies-list");
+
+  for (let i = 0; i < list.length; i++) {
+    const currentObject = list[i];
+    const card = createCard(currentObject);
+    moviesUl.append(card);
+  }
 }
 renderCards(moviesList);
+
+function createWatchlistCard(movie) {
+  const movieCard = document.createElement("li");
+  const moviePoster = document.createElement("img");
+  const movieInfo = document.createElement("div");
+  const movieTitle = document.createElement("h3");
+  const movieGenre = document.createElement("h4");
+
+  moviePoster.src = movie.poster;
+  moviePoster.alt = `Poster do filme ${movie.title}`;
+
+  movieTitle.innerText = movie.title;
+  movieGenre.innerText = movie.genre;
+
+  movieCard.className = "movie";
+  moviePoster.className = "movie-poster";
+  movieInfo.className = "movie-info";
+  movieTitle.className = "movie-title";
+  movieGenre.className = "movie-genre";
+
+  movieInfo.append(movieTitle, movieGenre);
+  movieCard.append(moviePoster, movieInfo);
+
+  return movieCard;
+}
+
+function renderWatchlistCards(list) {
+  const moviesUl = document.querySelector(".watchlist-list");
+  moviesUl.innerHTML = "";
+
+  for (let i = 0; i < list.length; i++) {
+    const currentObject = list[i];
+    const card = createWatchlistCard(currentObject);
+    moviesUl.append(card);
+  }
+}
