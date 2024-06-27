@@ -92,6 +92,8 @@ function createCard(movie) {
 
   for (let i = 1; i <= 5; i++) {
     const starIcon = document.createElement("i");
+    starIcon.id = i;
+
     starIcon.classList.add("fa", "fa-star");
     if (i <= movie.stars) {
       starIcon.classList.add("star-checked");
@@ -121,8 +123,35 @@ function createCard(movie) {
   }
 
   buttonWatchlist.addEventListener("click", function () {
-    watchlistList.push(movie);
-    renderWatchlistCards(watchlistList);
+    let movieExists = false;
+    for (let i = 0; i < watchlistList.length; i++) {
+      const currentMovie = watchlistList[i];
+
+      if (currentMovie.id === movie.id) {
+        movieExists = true;
+      }
+    }
+
+    if (movieExists === false) {
+      watchlistList.push(movie);
+      renderWatchlistCards(watchlistList);
+    } else {
+      alert(`O filme ${movie.title} já está na lista`);
+    }
+  });
+
+  movieStarsDiv.addEventListener("click", function (event) {
+    const allStars = event.currentTarget.children;
+
+    for (let i = 0; i < allStars.length; i++) {
+      const currentStar = event.target.id;
+
+      if (i < currentStar) {
+        allStars[i].classList.add("star-checked");
+      } else {
+        allStars[i].classList.remove("star-checked");
+      }
+    }
   });
 
   movieActions.append(buttonWatchlist, buttonRentMovie);
@@ -156,20 +185,30 @@ function createWatchlistCard(movie) {
   const movieInfo = document.createElement("div");
   const movieTitle = document.createElement("h3");
   const movieGenre = document.createElement("h4");
+  const btnRemove = document.createElement("button");
 
   moviePoster.src = movie.poster;
   moviePoster.alt = `Poster do filme ${movie.title}`;
 
   movieTitle.innerText = movie.title;
   movieGenre.innerText = movie.genre;
+  btnRemove.innerText = "Remover";
 
   movieCard.className = "movie";
   moviePoster.className = "movie-poster";
   movieInfo.className = "movie-info";
   movieTitle.className = "movie-title";
   movieGenre.className = "movie-genre";
+  btnRemove.classList.add("movie-action-button");
 
-  movieInfo.append(movieTitle, movieGenre);
+  btnRemove.addEventListener("click", function () {
+    watchlistList.splice(watchlistList.indexOf(movie), 1);
+    renderWatchlistCards(watchlistList);
+    // const index = watchlistList.indexOf(movie);
+    // watchlistList.splice(index, 1);
+  });
+
+  movieInfo.append(movieTitle, movieGenre, btnRemove);
   movieCard.append(moviePoster, movieInfo);
 
   return movieCard;
